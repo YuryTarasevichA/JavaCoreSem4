@@ -10,6 +10,8 @@ import market.exeption.CustomerNotFoundException;
 import market.exeption.ProductNotFoundException;
 import market.exeption.QuantityIsNegativeException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MarketProgram {
@@ -18,7 +20,7 @@ public class MarketProgram {
         List<Customer> customers = market.getCustomers();
         List<Product> products = market.getProducts();
         Order[] orders = createOrders(customers, products, market);
-        Date randomDate = generateRandomDate();
+        Date randomDate = generateCurrentDateOrInputData();
 //        printOrders(orders);
         printTotalSpentByCustomers(market, customers);
         System.out.println("===========================================");
@@ -31,18 +33,27 @@ public class MarketProgram {
     }
 
     /**
-     * Генерирует случайную дату в прошлом от начала 1900 года до текущей даты.
-     *
-     * @return случайная дата
+     * Генерирует объект Date, представляющий текущую дату или дату, введенную пользователем.
+     * Если пользовательский ввод имеет формат yyyy-MM-dd, он создает объект Date из этого ввода.
+     * Если пользовательский ввод недействителен или пуст, используется текущая дата по умолчанию.
+     * @return объект Date, представляющий текущую дату или пользовательскую дату
      */
-    public static Date generateRandomDate() {
-        Random random = new Random();
-        Calendar calendar = Calendar.getInstance();
-        // Генерируем случайное количество дней от начала 1900 года до текущей даты
-        int randomDays = random.nextInt((int) (System.currentTimeMillis() / (1000 * 60 * 60 * 24)));
-        // Устанавливаем случайную дату
-        calendar.add(Calendar.DAY_OF_YEAR, -randomDays);
-        return calendar.getTime();
+    public static Date generateCurrentDateOrInputData() {
+        Scanner scanner =new Scanner(System.in);
+        System.out.println("Введите дату в формате yyyy-MM-dd: ");
+        String inputData = scanner.nextLine();
+        if (!inputData.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(inputData);
+                return date;
+            } catch (ParseException e) {
+                System.out.println("Invalid date format. Using current date instead.");
+                return new Date();
+            }
+        } else {
+            return new Date();
+        }
     }
 
     /**
@@ -61,29 +72,13 @@ public class MarketProgram {
             for (int j = 0; j < random.nextInt(products.size() + 1); j++) {
                 Product randomProduct = products.get(random.nextInt(products.size()));
                 int quantity = random.nextInt(5) + 1;
-                Date randomDate = generateRandomDate();
+                Date randomDate = generateCurrentDateOrInputData();
                 buy(market, customers.get(i), randomProduct, quantity, randomDate);
             }
             orders[i] = order;
         }
         return orders;
     }
-
-    //    public static void printOrders(Order[] orders) {
-//        for (Order order : orders) {
-//            System.out.println("Order for customer: " + order.getCustomer().getName());
-//            System.out.println("Products:");
-//            for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
-//                System.out.println(entry.getKey().getName() + " - Quantity: " + entry.getValue());
-//            }
-//            System.out.println();
-//        }
-//    }
-//    public static void printOrders(List<Customer> customers) {
-//        for (Customer customer : customers){
-//
-//        }
-//    }
 
     /**
      * Метод выводит общую сумму, потраченную каждым клиентом на рынке.
@@ -119,6 +114,21 @@ public class MarketProgram {
             System.out.println(e.getMessage());
         }
     }
+    //    public static void printOrders(Order[] orders) {
+//        for (Order order : orders) {
+//            System.out.println("Order for customer: " + order.getCustomer().getName());
+//            System.out.println("Products:");
+//            for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
+//                System.out.println(entry.getKey().getName() + " - Quantity: " + entry.getValue());
+//            }
+//            System.out.println();
+//        }
+//    }
+//    public static void printOrders(List<Customer> customers) {
+//        for (Customer customer : customers){
+//
+//        }
+//    }
 
 
 }

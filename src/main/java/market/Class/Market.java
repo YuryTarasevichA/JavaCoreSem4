@@ -57,7 +57,14 @@ public class Market {
         return totalSpent;
     }
 
-
+    /**
+     * Метод создает заказ для указанного клиента и добавляет его в список заказов.
+     * Устанавливает дату заказа. Применяет скидки в зависимости от праздника и пола клиента.
+     *
+     * @param customer клиент, для которого создается заказ
+     * @return идентификатор созданного заказа
+     * @throws CustomerNotFoundException если клиент не найден в списке клиентов
+     */
     public int createOrder(Customer customer) throws CustomerNotFoundException {
         if (!customers.contains(customer))
             throw new CustomerNotFoundException("customer not found " + customers);
@@ -73,7 +80,16 @@ public class Market {
         orders.add(order);
         return order.getId();
     }
-
+    /**
+     * Метод для добавления продукта в заказ.
+     *
+     * @param orderId идентификатор заказа
+     * @param product добавляемый продукт
+     * @param quantity количество продукта
+     * @return обновленный заказ
+     * @throws ProductNotFoundException если продукт не найден
+     * @throws QuantityIsNegativeException если количество продукта отрицательное или равно нулю
+     */
     public Order addProductToOrder(int orderId, Product product, int quantity)
             throws ProductNotFoundException, QuantityIsNegativeException {
         if (!products.contains(product)) throw new ProductNotFoundException("product not found");
@@ -103,6 +119,4 @@ public class Market {
     public List<Order> getOrders() {
         return orders;
     }
-
-
 }
