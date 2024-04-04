@@ -1,0 +1,5 @@
+1,Meat,12
+2,Milk,2
+3,Beard,1
+4,Oil,4
+5,Chicken,9

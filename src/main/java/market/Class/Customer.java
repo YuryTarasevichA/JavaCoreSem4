@@ -1,21 +1,21 @@
 package market.Class;
 
-import market.Enam.Gender;
+import market.Enum.Gender;
 
 import java.util.Objects;
 
 public class Customer {
+    private int id;
     private String name;
     private int age;
     private String phone;
-    private int id;
     private Gender gender;
 
-    public Customer(String name, int age, String phone, int id, Gender gender) {
+    public Customer(int id, String name, int age, String phone, Gender gender) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.phone = phone;
-        this.id = id;
         this.gender = gender;
     }
 

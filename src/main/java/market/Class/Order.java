@@ -1,6 +1,7 @@
 package market.Class;
 
-import market.Enam.Holiday;
+import market.Enum.Holiday;
+import market.exeption.InvalidDateFormatException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,17 +17,21 @@ public class Order {
     private Date orderDate;
     private double discount;
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Date orderDate) throws InvalidDateFormatException {
         this.orderDate = orderDate;
         this.holiday = determineHoliday(orderDate);
     }
 
-    public Holiday determineHoliday(Date orderDate) {
+    public Holiday determineHoliday(Date orderDate) throws InvalidDateFormatException {
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(orderDate);
             int month = calendar.get(Calendar.MONTH) + 1; // (январь - 1, февраль - 2, и т.д.)
-
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            if (month < 1 || month > 12 || day < 1 || day > 31) {
+                throw new InvalidDateFormatException("Invalid date format: " +
+                        calendar.get(Calendar.YEAR) + "-" + month + "-" + day);
+            }
             if (month == 1 && calendar.get(Calendar.DAY_OF_MONTH) == 1 || calendar.get(Calendar.DAY_OF_MONTH) == 2) {
                 return Holiday.NEW_YEAR; // новый год 1 и 2 января скидки
             } else if (month == 3 && calendar.get(Calendar.DAY_OF_MONTH) == 8) {
@@ -34,8 +39,8 @@ public class Order {
             } else if (month == 2 && calendar.get(Calendar.DAY_OF_MONTH) == 23) {
                 return Holiday.MAN_DAY;
             }
-        }catch (Exception e) {
-            System.out.println("Ошибка при определении праздника: " + e.getMessage());
+        } catch (InvalidDateFormatException e) {
+            throw e;
         }
         return Holiday.N0_HOLIDAY;
     }
@@ -81,6 +86,7 @@ public class Order {
     public void setDiscount(double discount) {
         this.discount = discount;
     }
+
     public double calculateTotalPrice() {
         double totalPrice = 0;
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {

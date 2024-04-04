@@ -4,9 +4,10 @@ import market.Class.Customer;
 import market.Class.Market;
 import market.Class.Order;
 import market.Class.Product;
-import market.Enam.Gender;
-import market.Enam.Holiday;
+import market.Enum.Gender;
+import market.Enum.Holiday;
 import market.exeption.CustomerNotFoundException;
+import market.exeption.InvalidDateFormatException;
 import market.exeption.ProductNotFoundException;
 import market.exeption.QuantityIsNegativeException;
 
@@ -17,6 +18,7 @@ import java.util.*;
 public class MarketProgram {
     public static void main(String[] args) {
         Market market = new Market();
+
         List<Customer> customers = market.getCustomers();
         List<Product> products = market.getProducts();
         Order[] orders = createOrders(customers, products, market);
@@ -25,10 +27,12 @@ public class MarketProgram {
         printTotalSpentByCustomers(market, customers);
         System.out.println("===========================================");
         try {
-            int orderId = market.createOrder(new Customer("Alex", 29, "7231876238", 05, Gender.MALE));
+            int orderId = market.createOrder(new Customer(6, "Alex", 23, "+375339123344", Gender.MALE));
             System.out.println("Created new order with ID: " + orderId);
         } catch (CustomerNotFoundException e) {
             System.out.println(e.getMessage());
+        } catch (InvalidDateFormatException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -110,11 +114,12 @@ public class MarketProgram {
             int orderId = market.createOrder(customer);
             market.addProductToOrder(orderId, product, quantity);
             System.out.println(market.getOrders());
-        } catch (CustomerNotFoundException | ProductNotFoundException | QuantityIsNegativeException e) {
+        } catch (CustomerNotFoundException | ProductNotFoundException | QuantityIsNegativeException |
+                 InvalidDateFormatException e) {
             System.out.println(e.getMessage());
         }
     }
-    //    public static void printOrders(Order[] orders) {
+//        public static void printOrders(Order[] orders) {
 //        for (Order order : orders) {
 //            System.out.println("Order for customer: " + order.getCustomer().getName());
 //            System.out.println("Products:");

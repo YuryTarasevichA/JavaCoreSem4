@@ -1,4 +1,4 @@
-package market.Enam;
+package market.Enum;
 
 public enum Gender {
     MALE, FEMALE
